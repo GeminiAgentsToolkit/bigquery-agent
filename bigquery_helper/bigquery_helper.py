@@ -48,3 +48,11 @@ class BigQueryHelper:
             result_str_list.append(str(row_dict))
 
         return "\n".join(result_str_list)
+
+    def get_table_ref(self) -> str:
+        """
+        Returns the fully-qualified table reference string.
+
+        :return: The table reference in the format project_id.dataset_id.table_id
+        """
+        return self.table_ref

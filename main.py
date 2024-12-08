@@ -1,17 +1,26 @@
+from bigquery_helper import create_bigquery_agent
 import vertexai
-#from config import (PROJECT_ID, REGION, SIMPLE_MODEL)
-from gemini_agents_toolkit import agent
 
+VERTEX_PROJECT_ID = "hacking-dec-7-2024"
+BIGQUERY_PROJECT_ID = "trim-field-444020-g8"
+REGION = "us-west1"
+DATASET_ID = "todo_demo"
+TABLE_ID = "tasks"
+MODEL_NAME = "gemini-1.5-flash-002"
 
-def say_to_duck(say: str):
-    """say something to a duck"""
-    return f"duck answer is: duck duck {say} duck duck duck"
+# Initialize Vertex AI with the gcp_project_id and location
+vertexai.init(project="hacking-dec-7-2024", location="us-west1")
 
+todo_agent = create_bigquery_agent(
+    bigquery_project_id=BIGQUERY_PROJECT_ID,
+    dataset_id=DATASET_ID,
+    table_id=TABLE_ID,
+    model_name=MODEL_NAME
+)
 
-vertexai.init(project='trim-field-444020-g8', location='us-west1')
+# Interact with the agent
+response = todo_agent.send_message(
+    "Show me all todos from the database"
+)[0]
 
-all_functions = [say_to_duck]
-duck_comms_agent = agent.create_agent_from_functions_list(functions=all_functions,
-                                                          model_name='gemini-1.5-flash-002')
-
-print(duck_comms_agent.send_message("say to the duck message: I am hungry"))
+print(response)
