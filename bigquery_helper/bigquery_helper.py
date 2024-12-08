@@ -38,8 +38,7 @@ class BigQueryHelper:
 
         :param sql_query: The SQL query to execute.
         :return: A newline-separated string representation of the query results.
-        """
-        sql_query = sql_query.replace("\\", "")
+        """        
         query_job = self.client.query(sql_query)
         results = query_job.result()
 
