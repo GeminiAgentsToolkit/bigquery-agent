@@ -2,6 +2,7 @@ from google.cloud import bigquery
 
 
 class BigQueryHelper:
+
     def __init__(self, project_id: str, dataset_id: str, table_id: str):
         """
         Initialize the BigQueryHelper with the provided project, dataset, and table IDs.
@@ -21,14 +22,14 @@ class BigQueryHelper:
         # Fully-qualified table ID in standard SQL format
         self.table_ref = f"{self.project_id}.{self.dataset_id}.{self.table_id}"
 
-    def get_schema(self):
+    def get_schema(self) -> str:
         """
         Retrieves the schema of the configured BigQuery table.
 
         :return: A list of SchemaField objects describing the table schema.
         """
         table = self.client.get_table(self.table_ref)
-        return table.schema
+        return str(table.schema) + "\nTable ref:" + table.reference
 
     def run_query(self, sql_query: str) -> str:
         """
