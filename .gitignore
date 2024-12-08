@@ -1,0 +1,3 @@
+dist/*
+build/*
+bigquery_agent.egg-info/*

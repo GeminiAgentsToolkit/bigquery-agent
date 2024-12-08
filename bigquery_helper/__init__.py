@@ -50,7 +50,8 @@ def create_bigquery_agent(
     all_functions = [helper.get_schema, helper.run_query, helper.get_table_ref]
 
     # Prepend prompt to the system_instruction
-    updated_system_instruction = f"You have access to a todo database table in a separate project. Show me all my todos. Before doing any query, check the DB schema (you have a function for it) and check the table/db name by calling the ref function. {system_instruction}".strip()
+    updated_system_instruction = f"""You have access to a BigQuery database table in a GCP project. Before doing any query, check the DB schema
+      (you have a function for it) and check the table/db name by calling the ref function to make sure that you will constract correct query. {system_instruction}""".strip()
 
     # Create and return the agent instance
     todo_agent = agent.create_agent_from_functions_list(
