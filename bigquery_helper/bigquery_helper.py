@@ -29,7 +29,7 @@ class BigQueryHelper:
         :return: A list of SchemaField objects describing the table schema.
         """
         table = self.client.get_table(self.table_ref)
-        return str(table.schema) + "\nTable ref:" + table.reference
+        return table.schema
 
     def run_query(self, sql_query: str) -> str:
         """
