@@ -23,7 +23,7 @@ pip install bigquery_agent
 
 ```python
 import vertexai
-from bigquery_agent import create_bigquery_agent
+from bigquery_helper import create_bigquery_agent
 
 vertexai.init(project="YOUR_GCP_PROJECT", location="us-west1")
 
