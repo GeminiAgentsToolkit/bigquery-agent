@@ -21,7 +21,7 @@ long_description = read_readme()
 
 setup(
     name='bigquery_agent',
-    version='0.0.2',
+    version='1.0.0',
     packages=find_packages(),
     description='Library for creating agent around BigQuery',
     long_description_content_type='text/markdown',

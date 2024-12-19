@@ -1,5 +1,7 @@
 from google.cloud import bigquery
 
+import re
+
 
 class BigQueryHelper:
 
@@ -33,13 +35,14 @@ class BigQueryHelper:
 
     def run_query(self, sql_query: str) -> str:
         """
-        Executes a provided SQL query on the configured BigQuery project and dataset,
-        and returns the results as a string.
+        Runs a SQL query against the BigQuery database. 
+        SQL query should be valid BigQuery SQL query with single quotes around strings, 
+        do not escape them. Example of correct usage: SELECT * FROM `my_table` WHERE id = 'abc-123'"
 
         :param sql_query: The SQL query to execute.
         :return: A newline-separated string representation of the query results.
         """        
-        query_job = self.client.query(sql_query)
+        query_job = self.client.query(self._clean_sql(sql_query))
         results = query_job.result()
 
         result_str_list = []
@@ -50,7 +53,6 @@ class BigQueryHelper:
 
         return "\n".join(result_str_list)
 
-
     def get_table_ref(self) -> str:
         """
         Returns the fully-qualified table reference string.
@@ -58,3 +60,14 @@ class BigQueryHelper:
         :return: The table reference in the format project_id.dataset_id.table_id
         """
         return self.table_ref
+
+    def _clean_sql(self, sql_query):
+        """Cleans up a SQL query string, specifically removing excessive backslashes."""
+        # Replace multiple backslashes followed by a single quote with just a single quote
+        cleaned_sql = re.sub(r"\\+'", "'", sql_query)
+        
+        #This regex will target backslashes that are immediately followed by a word character (\w) or a hyphen (-)
+        #It will match only the single backslashes, but only if they are followed by the specified characters.
+        cleaned_sql = re.sub(r"\\(?=[\w-])", "", cleaned_sql)
+
+        return cleaned_sql
