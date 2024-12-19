@@ -31,7 +31,7 @@ agent = create_bigquery_agent(
     bigquery_project_id="YOUR_BQ_PROJECT",
     dataset_id="YOUR_DATASET",
     table_id="YOUR_TABLE",
-    model_name="gemini-1.5-flash-002",
+    model_name="gemini-2.0-flash-exp",
     system_instruction="Query the todos table as needed."
 )
 
