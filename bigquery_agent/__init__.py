@@ -36,7 +36,8 @@ def create_bigquery_agent(
     delegates: list = None,
     on_message = None,
     generation_config: dict = None,
-    system_instruction: str = ""
+    system_instruction: str = "",
+    bq_credentials = None
 ):
     """
     Creates and returns an agent initialized with functions from BigQueryHelper 
@@ -55,6 +56,7 @@ def create_bigquery_agent(
     :param on_message: A callback that fires on each message from the agent.
     :param generation_config: Additional generation configuration parameters.
     :param system_instruction: Instruction message.
+    :param bq_credentials: credentials that will be used with BigQuery
     :return: An agent instance configured to query the specified BigQuery table.
     """
 
@@ -64,7 +66,8 @@ def create_bigquery_agent(
     helper = BigQueryHelper(
         project_id=bigquery_project_id,
         dataset_id=dataset_id,
-        table_id=table_id
+        table_id=table_id,
+        credentials=bq_credentials
     )
 
     # Define the agent with helper's functions

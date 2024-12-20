@@ -5,7 +5,7 @@ import re
 
 class BigQueryHelper:
 
-    def __init__(self, project_id: str, dataset_id: str, table_id: str):
+    def __init__(self, project_id: str, dataset_id: str, table_id: str, credentials=None):
         """
         Initialize the BigQueryHelper with the provided project, dataset, and table IDs.
         This constructor also initializes the BigQuery client and table reference.
@@ -13,13 +13,14 @@ class BigQueryHelper:
         :param project_id: GCP project ID
         :param dataset_id: BigQuery dataset ID
         :param table_id:   BigQuery table ID
+        :param credentials: credentials used to access BigQuery
         """
         self.project_id = project_id
         self.dataset_id = dataset_id
         self.table_id = table_id
 
         # Initialize the BigQuery client
-        self.client = bigquery.Client(project=self.project_id)
+        self.client = bigquery.Client(project=self.project_id, credentials=credentials)
 
         # Fully-qualified table ID in standard SQL format
         self.table_ref = f"{self.project_id}.{self.dataset_id}.{self.table_id}"
