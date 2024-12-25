@@ -5,7 +5,7 @@ import re
 
 class BigQueryHelper:
 
-    def __init__(self, project_id: str, dataset_id: str, table_id: str, credentials=None):
+    def __init__(self, project_id: str, dataset_id: str, table_id: str, credentials=None, max_byte_limit_per_query=0):
         """
         Initialize the BigQueryHelper with the provided project, dataset, and table IDs.
         This constructor also initializes the BigQuery client and table reference.
@@ -14,10 +14,12 @@ class BigQueryHelper:
         :param dataset_id: BigQuery dataset ID
         :param table_id:   BigQuery table ID
         :param credentials: credentials used to access BigQuery
+        :param max_byte_limit_per_query: the query will NOT be executed if this value is set and estimates is exceeds it
         """
         self.project_id = project_id
         self.dataset_id = dataset_id
         self.table_id = table_id
+        self.max_byte_limit_per_query = max_byte_limit_per_query
 
         # Initialize the BigQuery client
         self.client = bigquery.Client(project=self.project_id, credentials=credentials)
@@ -43,6 +45,18 @@ class BigQueryHelper:
         :param sql_query: The SQL query to execute.
         :return: A newline-separated string representation of the query results.
         """        
+        updated_sql_query = self._clean_sql(sql_query)
+        if self.max_byte_limit_per_query > 0:
+            job_config = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False)
+            query_job = self.client.query(updated_sql_query, job_config=job_config)
+            if query_job.total_bytes_processed >= self.max_byte_limit_per_query:
+                return (f"Executing query {updated_sql_query} will exceed byte" +
+                         f"limit: {self.max_byte_limit_per_query}" +
+                         f"and will take: {query_job.total_bytes_processed} bytes." +
+                         "Please stop/do not do query any more and tell user about the error."+
+                         "Show user the query and byte limits you have and size of request that query would do")
+
+
         query_job = self.client.query(self._clean_sql(sql_query))
         results = query_job.result()
 

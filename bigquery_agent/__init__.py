@@ -16,6 +16,7 @@ When using the tool to query:
     -  To query for a run_id of "abc-123", the SQL should be: `SELECT * FROM my_table WHERE run_id = 'abc-123'`
     - **Do not use** double backslashes: `SELECT * FROM my_table WHERE run_id = \\'abc-123\\'`
 - **Do not** use excessive backslashes. Only use them when necessary to escape special characters within a string literal according to BigQuery SQL rules.
+- **BEFORE** doing any query make sure that you have checked table name by calling get_table_ref and schema from get_schema to make sure that you have constracted the correct SQL
 
 When generating SQL queries, be concise and avoid unnecessary clauses or joins unless explicitly requested by the user.
 
@@ -27,7 +28,7 @@ def create_bigquery_agent(
     bigquery_project_id: str,
     dataset_id: str,
     table_id: str,
-    model_name: str,
+    model_name:str = "gemini-2.0-flash-exp",
     debug: bool = False,
     add_scheduling_functions: bool = False,
     gcs_bucket: str = None,
@@ -37,7 +38,8 @@ def create_bigquery_agent(
     on_message = None,
     generation_config: dict = None,
     system_instruction: str = "",
-    bq_credentials = None
+    bq_credentials = None,
+    max_byte_limit_per_query = 0
 ):
     """
     Creates and returns an agent initialized with functions from BigQueryHelper 
@@ -57,6 +59,7 @@ def create_bigquery_agent(
     :param generation_config: Additional generation configuration parameters.
     :param system_instruction: Instruction message.
     :param bq_credentials: credentials that will be used with BigQuery
+    :param max_byte_limit_per_query: the query will NOT be executed if this value is set and estimates is exceeds it
     :return: An agent instance configured to query the specified BigQuery table.
     """
 
@@ -67,7 +70,8 @@ def create_bigquery_agent(
         project_id=bigquery_project_id,
         dataset_id=dataset_id,
         table_id=table_id,
-        credentials=bq_credentials
+        credentials=bq_credentials,
+        max_byte_limit_per_query=max_byte_limit_per_query
     )
 
     # Define the agent with helper's functions
