@@ -6,10 +6,10 @@ BIGQUERY_PROJECT_ID = "trim-field-444020-g8"
 REGION = "us-west1"
 DATASET_ID = "todo_demo"
 TABLE_ID = "tasks"
-MODEL_NAME = "gemini-2.0-flash-exp"
+MODEL_NAME = "gemini-1.5-flash"
 
 # Initialize Vertex AI with the gcp_project_id and location
-vertexai.init(project="hacking-dec-7-2024", location="us-central1")
+vertexai.init(project="talktomydb", location="us-central1")
 
 todo_agent = create_bigquery_agent(
     bigquery_project_id=BIGQUERY_PROJECT_ID,
