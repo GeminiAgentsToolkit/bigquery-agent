@@ -1,2 +1,2 @@
-gemini_agents_toolkit>=3.5, < 4
+gemini_agents_toolkit>=3.8, < 4
 google-cloud-bigquery==3.27.0
