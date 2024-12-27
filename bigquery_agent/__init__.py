@@ -36,6 +36,7 @@ def create_bigquery_agent(
     gcs_blob: str = None,
     delegation_function_prompt: str = None,
     delegates: list = None,
+    function_call_limit_per_chat: int = None,
     on_message = None,
     generation_config: dict = None,
     system_instruction: str = "",
@@ -56,6 +57,7 @@ def create_bigquery_agent(
     :param gcs_blob: GCS blob name for agent storage (if any).
     :param delegation_function_prompt: Prompt for delegation functions.
     :param delegates: List of delegate configurations.
+    :param function_call_limit_per_chat: limits every chat instance to a number of backend function calls. Throws TooManyFunctionCallsException when limit is exceeded
     :param on_message: A callback that fires on each message from the agent.
     :param generation_config: Additional generation configuration parameters.
     :param system_instruction: Instruction message.
@@ -91,6 +93,7 @@ def create_bigquery_agent(
         gcs_blob=gcs_blob,
         delegation_function_prompt=delegation_function_prompt,
         delegates=delegates,
+        function_call_limit_per_chat=function_call_limit_per_chat,
         on_message=on_message,
         generation_config=generation_config,
         system_instruction=updated_system_instruction
